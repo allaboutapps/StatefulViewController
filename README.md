@@ -178,6 +178,14 @@ stateMachine.transitionToState(.None, animated: true) {
 
 ## Installation
 
+#### Swift Package Manager (Recommended)
+
+Add the following dependency to your `Package.swift` file:
+
+```
+.package(url: "https://github.com/allaboutapps/StatefulViewController.git", from: "5.1.0")
+```
+
 #### Carthage
 
 Add the following line to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile).
