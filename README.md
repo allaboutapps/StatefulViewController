@@ -133,7 +133,7 @@ class MyPlaceholderView: UIView, StatefulPlaceholderView {
 
 ### ForegroundViewStore
 
-Per default, StatefulViewController presents the placeholder views above all other views. In case other views, like some buttons, should be above the placholder in some states, you can assign a dictionary `[StatefulViewControllerState: Set<UIView>]` to the `foregroundViewStore` property.
+Per default, StatefulViewController presents the placeholder views above all other views. In case other views, like some buttons, should be above the placeholder in some states, you can assign a dictionary `[StatefulViewControllerState: Set<UIView>]` to the `foregroundViewStore` property.
 
 ```swift
 foregroundViewStore = [
@@ -225,11 +225,3 @@ xctool -scheme StatefulViewControllerTests -sdk iphonesimulator test
 * Create new branch to make your changes
 * Commit all your changes to your branch
 * Submit a [pull request](http://help.github.com/pull-requests/)
-
-
-## Contact
-
-Feel free to get in touch.
-
-* Website: <http://schuch.me>
-* Twitter: [@schuchalexander](http://twitter.com/schuchalexander)
