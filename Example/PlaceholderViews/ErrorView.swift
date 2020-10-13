@@ -6,14 +6,16 @@
 //  Copyright (c) 2014 Alexander Schuch. All rights reserved.
 //
 
-import UIKit
+import StatefulViewController
 
-class ErrorView: BasicPlaceholderView {
+class ErrorView: BasicPlaceholderView, ErrorPresentable {
 
 	let textLabel = UILabel()
 	let detailTextLabel = UILabel()
 	let tapGestureRecognizer = UITapGestureRecognizer()
 	
+    private let defaultError = "Something went wrong."
+    
 	override func setupView() {
 		super.setupView()
 		
@@ -46,5 +48,9 @@ class ErrorView: BasicPlaceholderView {
 		centerView.addConstraints(hConstraintsDetail)
 		centerView.addConstraints(vConstraints)
 	}
+    
+    func setError(_ error: Error?) {
+        textLabel.text = (error as? LocalizedError)?.errorDescription ?? defaultError
+    }
 
 }

@@ -32,8 +32,11 @@ public func == (lhs: ViewStateMachineState, rhs: ViewStateMachineState) -> Bool 
 ///		* Hide all managed views
 ///
 public class ViewStateMachine {
-    fileprivate var viewStore: [String: UIView]
-    fileprivate let queue = DispatchQueue(label: "com.aschuch.viewStateMachine.queue", attributes: [])
+    
+    private let defaultAnimationDuration: TimeInterval = 0.3
+    
+    private var viewStore: [String: UIView]
+    private let queue = DispatchQueue(label: "com.aschuch.viewStateMachine.queue", attributes: [])
 
     /// An invisible container view that gets added to the view.
     /// The placeholder views will be added to the containerView.
@@ -76,10 +79,10 @@ public class ViewStateMachine {
     }
     
     /// The current display state of views
-    public fileprivate(set) var currentState: ViewStateMachineState = .none
+    public private(set) var currentState: ViewStateMachineState = .none
 
     /// The last state that was enqueued
-    public fileprivate(set) var lastState: ViewStateMachineState = .none
+    public private(set) var lastState: ViewStateMachineState = .none
     
     
     // MARK: Init
@@ -148,22 +151,25 @@ public class ViewStateMachine {
     /// - parameter animated:	true if the transition should fade views in and out
     /// - parameter campletion:	called when all animations are finished and the view has been updated
     ///
-    public func transitionToState(_ state: ViewStateMachineState, animated: Bool = true, completion: (() -> ())? = nil) {
+    public func transitionToState(_ state: ViewStateMachineState, error: Error? = nil, animated: Bool = true, completion: (() -> ())? = nil) {
         lastState = state
         
         queue.async { [weak self] in
-            guard let strongSelf = self else { return }
+            guard let self = self else { return }
 
-            if state == strongSelf.currentState {
+            if state == self.currentState {
                 return
             }
             
+            // Update error in ErrorPresentables
+            self.setErrorPresentablesError(error)
+            
             // Suspend the queue, it will be resumed in the completion block
-            strongSelf.queue.suspend()
-            strongSelf.currentState = state
+            self.queue.suspend()
+            self.currentState = state
             
             let c: () -> () = {
-                strongSelf.queue.resume()
+                self.queue.resume()
                 completion?()
             }
             
@@ -171,9 +177,9 @@ public class ViewStateMachine {
             DispatchQueue.main.sync {
                 switch state {
                 case .none:
-                    strongSelf.hideAllViews(animated: animated, completion: c)
+                    self.hideAllViews(animated: animated, completion: c)
                 case .view(let viewKey):
-                    strongSelf.showView(forKey: viewKey, animated: animated, completion: c)
+                    self.showView(forKey: viewKey, animated: animated, completion: c)
                 }
             }
         }
@@ -182,7 +188,7 @@ public class ViewStateMachine {
     
     // MARK: Private view updates
     
-	fileprivate func showView(forKey state: String, animated: Bool, completion: (() -> ())? = nil) {
+	private func showView(forKey state: String, animated: Bool, completion: (() -> ())? = nil) {
         // Add the container view
         containerView.frame = view.bounds
         view.addSubview(containerView)
@@ -207,7 +213,6 @@ public class ViewStateMachine {
 
         // Bring all views from the foregroundViewStore, stored for the specific state, to the front
         if let state = StatefulViewControllerState(rawValue: state), let foregroundViewStore = foregroundViewStore, let foregroundViews = foregroundViewStore[state] {
-
             for foregroundView in foregroundViews {
                 view.bringSubviewToFront(foregroundView)
             }
@@ -232,7 +237,7 @@ public class ViewStateMachine {
 		animateChanges(animated: animated, animations: animations, completion: animationCompletion)
 	}
 
-    fileprivate func hideAllViews(animated: Bool, completion: (() -> ())? = nil) {
+    private func hideAllViews(animated: Bool, completion: (() -> ())? = nil) {
         let store = viewStore
 
         let animations: () -> () = {
@@ -254,11 +259,17 @@ public class ViewStateMachine {
         animateChanges(animated: animated, animations: animations, completion: animationCompletion)
     }
     
-    fileprivate func animateChanges(animated: Bool, animations: @escaping () -> (), completion: ((Bool) -> Void)?) {
+    private func animateChanges(animated: Bool, animations: @escaping () -> (), completion: ((Bool) -> Void)?) {
         if animated {
-            UIView.animate(withDuration: 0.3, animations: animations, completion: completion)
+            UIView.animate(withDuration: defaultAnimationDuration, animations: animations, completion: completion)
         } else {
             completion?(true)
+        }
+    }
+    
+    private func setErrorPresentablesError(_ error: Error?) {
+        DispatchQueue.main.async {
+            self.viewStore.forEach({ ($1 as? ErrorPresentable)?.setError(error) })
         }
     }
 }

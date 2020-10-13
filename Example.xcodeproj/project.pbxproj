@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		190B154C25358DCA006D3580 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190B154B25358DCA006D3580 /* ErrorViewController.swift */; };
 		4D0EA4721ECAF83E00139926 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0EA4711ECAF83E00139926 /* TableViewController.swift */; };
 		4D0EA4741ECB052000139926 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0EA4731ECB052000139926 /* CollectionViewController.swift */; };
 		4D137EB819C1BE5700AC1050 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D137EB619C1BE5700AC1050 /* LaunchScreen.xib */; };
@@ -74,6 +75,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		190B154B25358DCA006D3580 /* ErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
 		4D0EA4711ECAF83E00139926 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		4D0EA4731ECB052000139926 /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		4D137EB719C1BE5700AC1050 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 				4D0EA4711ECAF83E00139926 /* TableViewController.swift */,
 				4D0EA4731ECB052000139926 /* CollectionViewController.swift */,
 				D377D48921D5018800C93544 /* ForegroundViewStoreViewController.swift */,
+				190B154B25358DCA006D3580 /* ErrorViewController.swift */,
 				4DE62B0819B65AF00021630A /* PlaceholderViews */,
 				4DE62AE519B658610021630A /* Main.storyboard */,
 				4D137EB619C1BE5700AC1050 /* LaunchScreen.xib */,
@@ -443,6 +446,7 @@
 				4DE62AE219B658610021630A /* AppDelegate.swift in Sources */,
 				4D0EA4741ECB052000139926 /* CollectionViewController.swift in Sources */,
 				4DE62B0F19B65AF00021630A /* ErrorView.swift in Sources */,
+				190B154C25358DCA006D3580 /* ErrorViewController.swift in Sources */,
 				4DE62B1019B65AF00021630A /* LoadingView.swift in Sources */,
 				4DE62B0E19B65AF00021630A /* EmptyView.swift in Sources */,
 			);

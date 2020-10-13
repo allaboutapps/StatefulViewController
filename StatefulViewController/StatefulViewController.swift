@@ -15,6 +15,12 @@ public protocol BackingViewProvider {
     var backingView: UIView { get }
 }
 
+/// Protocol to hold an error to display depending message to user
+public protocol ErrorPresentable {
+    /// Given error set by transitionViewStates(loading:error?:animated:completion:)
+    func setError(_ error: Error?)
+}
+
 /// StatefulViewController protocol may be adopted by a view controller or a view in order to transition to
 /// error, loading or empty views.
 public protocol StatefulViewController: class, BackingViewProvider {

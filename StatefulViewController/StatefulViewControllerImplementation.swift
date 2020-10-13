@@ -83,11 +83,11 @@ extension StatefulViewController {
     public func transitionViewStates(loading: Bool = false, error: Error? = nil, animated: Bool = true, completion: (() -> Void)? = nil) {
         // Update view for content (i.e. hide all placeholder views)
         if hasContent() {
-            if let e = error {
+            if let error = error {
                 // show unobstrusive error
-                handleErrorWhenContentAvailable(e)
+                handleErrorWhenContentAvailable(error)
             }
-            self.stateMachine.transitionToState(.none, animated: animated, completion: completion)
+            self.stateMachine.transitionToState(.none, error: error, animated: animated, completion: completion)
             return
         }
         
@@ -98,7 +98,7 @@ extension StatefulViewController {
         } else if let _ = error {
             newState = .error
         }
-        self.stateMachine.transitionToState(.view(newState.rawValue), animated: animated, completion: completion)
+        self.stateMachine.transitionToState(.view(newState.rawValue), error: error, animated: animated, completion: completion)
     }
     
     
@@ -115,19 +115,19 @@ extension StatefulViewController {
     
     // MARK: Helper
     
-    fileprivate func placeholderView(_ state: StatefulViewControllerState) -> UIView? {
+    private func placeholderView(_ state: StatefulViewControllerState) -> UIView? {
         return stateMachine[state.rawValue]
     }
     
-    fileprivate func setPlaceholderView(_ view: UIView?, forState state: StatefulViewControllerState) {
+    private func setPlaceholderView(_ view: UIView?, forState state: StatefulViewControllerState) {
         stateMachine[state.rawValue] = view
     }
 
-    fileprivate func getForegroundStore() -> [StatefulViewControllerState: Set<UIView>]? {
+    private func getForegroundStore() -> [StatefulViewControllerState: Set<UIView>]? {
         return stateMachine.foregroundViewStore
     }
 
-    fileprivate func setForegroundViewStore(_ store: [StatefulViewControllerState: Set<UIView>]?) {
+    private func setForegroundViewStore(_ store: [StatefulViewControllerState: Set<UIView>]?) {
         stateMachine.foregroundViewStore = store
     }
 }
