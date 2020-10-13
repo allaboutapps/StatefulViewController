@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import StatefulViewController
 
-class BasicPlaceholderView: UIView {
+class BasicPlaceholderView: UIView, StatefulPlaceholderView {
 
 	let centerView: UIView = UIView()
+
+    private var insets: UIEdgeInsets = .zero
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -40,4 +43,12 @@ class BasicPlaceholderView: UIView {
         addConstraint(centerConstraint)
 	}
 
+    func prepare(insets: UIEdgeInsets = .zero) -> BasicPlaceholderView {
+        self.insets = insets
+        return self
+    }
+
+    func placeholderViewInsets() -> UIEdgeInsets {
+        return insets
+    }
 }

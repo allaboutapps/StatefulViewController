@@ -59,7 +59,7 @@ extension StatefulViewController {
         set { setPlaceholderView(newValue, forState: .empty) }
     }
 
-    public var foregroundViewStore: [StatefulViewControllerState: Set<UIView>]? {
+    public var foregroundViewStore: [StatefulViewControllerState: [UIView]]? {
         get { return getForegroundStore() }
         set { setForegroundViewStore(newValue) }
     }
@@ -123,12 +123,18 @@ extension StatefulViewController {
         stateMachine[state.rawValue] = view
     }
 
-    fileprivate func getForegroundStore() -> [StatefulViewControllerState: Set<UIView>]? {
+    fileprivate func getForegroundStore() -> [StatefulViewControllerState: [UIView]]? {
         return stateMachine.foregroundViewStore
     }
 
-    fileprivate func setForegroundViewStore(_ store: [StatefulViewControllerState: Set<UIView>]?) {
-        stateMachine.foregroundViewStore = store
+    fileprivate func setForegroundViewStore(_ store: [StatefulViewControllerState: [UIView]]?) {
+        var tempStore = store
+
+        store?.forEach { (state, views) in
+            tempStore?[state]?.removeDuplicates()
+        }
+
+        stateMachine.foregroundViewStore = tempStore
     }
 }
 
@@ -144,4 +150,18 @@ private func associatedObject<T: AnyObject>(_ host: AnyObject, key: UnsafeRawPoi
         objc_setAssociatedObject(host, key, value, .OBJC_ASSOCIATION_RETAIN)
     }
     return value!
+}
+
+extension Array where Element: Hashable {
+    func removingDuplicates() -> [Element] {
+        var addedDict = [Element: Bool]()
+
+        return filter {
+            addedDict.updateValue(true, forKey: $0) == nil
+        }
+    }
+
+    mutating func removeDuplicates() {
+        self = self.removingDuplicates()
+    }
 }

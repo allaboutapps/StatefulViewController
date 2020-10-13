@@ -9,7 +9,7 @@
 import UIKit
 import StatefulViewController
 
-class LoadingView: BasicPlaceholderView, StatefulPlaceholderView {
+class LoadingView: BasicPlaceholderView {
 
 	let label = UILabel()
 	
@@ -34,9 +34,4 @@ class LoadingView: BasicPlaceholderView, StatefulPlaceholderView {
 		centerView.addConstraints(vConstraintsLabel)
 		centerView.addConstraints(vConstraintsActivity)
 	}
-
-    func placeholderViewInsets() -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    }
-
 }

@@ -19,6 +19,14 @@ class ForegroundViewStoreViewController: UIViewController, StatefulViewControlle
 
     @IBOutlet weak var addButton: UIButton!
 
+    @IBOutlet weak var headerView: UIView!
+
+    @IBOutlet weak var headerLabel: UILabel!
+
+    @IBOutlet weak var overlayView: UIView!
+
+    @IBOutlet weak var stateFullContainer: UIView!
+
     // MARK: - Properties
 
     private let refreshControl = UIRefreshControl()
@@ -34,16 +42,22 @@ class ForegroundViewStoreViewController: UIViewController, StatefulViewControlle
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.addSubview(refreshControl)
 
+        let topInset = (navigationController?.navigationBar.frame.origin.y ?? 0)
+            + headerView.frame.origin.y
+            + headerView.frame.size.height
+        let insets = UIEdgeInsets(top: topInset, left: 0, bottom: 0, right: 0)
+
         // Setup placeholder views
-        loadingView = LoadingView(frame: view.frame)
-        emptyView = EmptyView(frame: view.frame)
+        loadingView = LoadingView(frame: view.frame).prepare(insets: insets)
+        emptyView = EmptyView(frame: view.frame).prepare(insets: insets)
         let failureView = ErrorView(frame: view.frame)
         failureView.tapGestureRecognizer.addTarget(self, action: #selector(refresh))
-        errorView = failureView
+        errorView = failureView.prepare(insets: insets)
 
         foregroundViewStore = [
-            .empty: [addButton],
-            .error: [addButton]
+            .empty: [overlayView, headerLabel, addButton],
+            .error: [overlayView, headerLabel, addButton],
+            .loading: [addButton]
         ]
     }
 
@@ -92,11 +106,12 @@ class ForegroundViewStoreViewController: UIViewController, StatefulViewControlle
     }
     
     @IBAction func onDeleteButton(_ sender: Any) {
-        foregroundViewStore?[.empty]?.remove(deleteButton)
+        guard let indexOfDeleteButton = foregroundViewStore?[.empty]?.firstIndex(of: deleteButton) else { return }
+        foregroundViewStore?[.empty]?.remove(at: indexOfDeleteButton)
     }
 
     @IBAction func onAddButton(_ sender: Any) {
-        foregroundViewStore?[.empty]?.insert(deleteButton)
+        foregroundViewStore?[.empty]?.append(deleteButton)
     }
 }
 

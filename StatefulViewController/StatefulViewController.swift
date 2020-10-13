@@ -43,7 +43,7 @@ public protocol StatefulViewController: class, BackingViewProvider {
     var emptyView: UIView? { get set }
 
     /// This store includes the views, who should be in the front during the specific state (Key)
-    var foregroundViewStore: [StatefulViewControllerState: Set<UIView>]? { get set }
+    var foregroundViewStore: [StatefulViewControllerState: [UIView]]? { get set }
 
     // MARK: Transitions
 
