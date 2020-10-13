@@ -12,6 +12,11 @@ import StatefulViewController
 
 class StatefulViewControllerTests: XCTestCase {
     
+    enum TestError: Error, LocalizedError, Equatable {
+        case noConnection
+        case invalidInput
+    }
+    
     lazy var stateMachine = ViewStateMachine(view: UIView())
     var errorView: UIView = UIView()
     var loadingView: UIView = UIView()
@@ -65,4 +70,24 @@ class StatefulViewControllerTests: XCTestCase {
         }
     }
     
+    func testErrorPresentable() {
+        errorView = ErrorPresentableView()
+        stateMachine.addView(errorView, forState: "error")
+        
+        stateMachine.transitionToState(.view("loading"), animated: false)
+        
+        stateMachine.transitionToState(.view("error"), error: TestError.invalidInput, animated: false) {
+            XCTAssertNil((self.loadingView as? ErrorPresentableView)?.error)
+            XCTAssertEqual((self.errorView as? ErrorPresentableView)?.error as? TestError, TestError.invalidInput)
+        }
+    }
+    
+}
+
+class ErrorPresentableView: UIView, ErrorPresentable {
+    private (set) var error: Error?
+    
+    func setError(_ error: Error?) {
+        self.error = error
+    }
 }
