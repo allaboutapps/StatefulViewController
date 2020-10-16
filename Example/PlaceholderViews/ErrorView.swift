@@ -49,7 +49,10 @@ class ErrorView: BasicPlaceholderView, ErrorPresentable {
 		centerView.addConstraints(vConstraints)
 	}
     
+    private(set) var error: Error?
+    
     func setError(_ error: Error?) {
+        self.error = error
         textLabel.text = (error as? LocalizedError)?.errorDescription ?? defaultError
     }
 

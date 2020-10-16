@@ -10,9 +10,13 @@ import StatefulViewController
 
 enum ExampleError: Error, LocalizedError {
     case noConnection
+    case `default`
     
     var errorDescription: String? {
-        "Check your internet connection."
+        switch self {
+        case .noConnection: return "Check your internet connection."
+        case .default: return "Some Error."
+        }
     }
 }
 
@@ -43,23 +47,29 @@ class ErrorViewController: UIViewController, StatefulViewController {
     @objc func refresh() {
         if (lastState == .loading) { return }
         
-        startLoading {
+        let newError = self.newError()
+        
+        startLoading() {
             print("completaion startLoading -> loadingState: \(self.currentState.rawValue)")
         }
         print("startLoading -> loadingState: \(self.lastState.rawValue)")
         
         // Fake network call
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             // set Error
-            self.endLoading(error: ExampleError.noConnection, completion: {
+            self.endLoading(error: newError, completion: {
                 print("completion endLoading -> loadingState: \(self.currentState.rawValue)")
             })
             print("endLoading -> loadingState: \(self.lastState.rawValue)")
         }
     }
     
+    private func newError() -> ExampleError {
+        guard let currentError = (errorView as? ErrorView)?.error as? ExampleError else { return .default }
+        return currentError == .default ? .noConnection : .default
+    }
+    
 }
-
 
 extension ErrorViewController {
     
